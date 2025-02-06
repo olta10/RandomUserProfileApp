@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Button, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 
-const UserProfile = ({ route, navigation }) => {
+const UserProfile = ({ route }) => {
   const { user } = route.params;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Image source={{ uri: user.picture.large }} style={styles.image} />
       <Text style={styles.name}>{user.name.first} {user.name.last}</Text>
       <Text style={styles.email}>{user.email}</Text>
@@ -13,8 +13,7 @@ const UserProfile = ({ route, navigation }) => {
       <Text style={styles.address}>
         {user.location.street.number} {user.location.street.name}, {user.location.city}, {user.location.country}
       </Text>
-      <Button title="Back to List" onPress={() => navigation.goBack()} color="#007BFF" />
-    </ScrollView>
+    </View>
   );
 };
 
@@ -22,38 +21,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#fff',
   },
   image: {
-    width: 180,
-    height: 180,
-    borderRadius: 90,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
     marginBottom: 20,
-    borderWidth: 4,
-    borderColor: '#ddd',
   },
   name: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 10,
   },
   email: {
-    fontSize: 20,
-    color: '#555',
-    marginBottom: 10,
+    fontSize: 18,
+    color: '#666',
+    marginBottom: 5,
   },
   phone: {
-    fontSize: 20,
-    color: '#555',
-    marginBottom: 10,
+    fontSize: 18,
+    color: '#666',
+    marginBottom: 5,
   },
   address: {
-    fontSize: 18,
+    fontSize: 16,
+    color: '#444',
     textAlign: 'center',
-    marginBottom: 20,
-    color: '#777',
+    marginTop: 10,
   },
 });
 

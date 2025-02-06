@@ -4,19 +4,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView, StyleSheet, Text } from 'react-native';
 import ProfileList from './src/components/ProfileList';
 import UserProfile from './src/components/UserProfile';
-import Login from './src/components/Login';  // Import the Login screen
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ title: 'Login' }}
-        />
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           name="Home"
           component={HomeScreen}

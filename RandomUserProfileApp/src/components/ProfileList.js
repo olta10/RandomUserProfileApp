@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, Text, TouchableOpacity, Image, StyleSheet, Button } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
 
 const ProfileList = ({ navigation }) => {
   const [users, setUsers] = useState([]);
+  const screenWidth = Dimensions.get('window').width; // Merr gjerësinë e ekranit
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('https://randomuser.me/api/?results=10');
+      const response = await fetch('https://randomuser.me/api/?results=12');
       const data = await response.json();
       setUsers(data.results);
     } catch (error) {
@@ -18,29 +19,39 @@ const ProfileList = ({ navigation }) => {
     fetchUsers();
   }, []);
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.profileCard}
-      onPress={() => navigation.navigate('ProfileDetails', { user: item })}
-    >
-      <Image source={{ uri: item.picture.thumbnail }} style={styles.image} />
-      <View style={styles.textContainer}>
-        <Text style={styles.name}>{item.name.first} {item.name.last}</Text>
-        <Text style={styles.location}>{item.location.city}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-
   return (
     <View style={styles.container}>
-      <Button title="Reload Profiles" onPress={fetchUsers} color="#007BFF" />
-      <FlatList
-        data={users}
-        keyExtractor={(item) => item.login.uuid}
-        renderItem={renderItem}
-        extraData={users}
-        contentContainerStyle={styles.list}
-      />
+      <TouchableOpacity style={styles.reloadButton} onPress={fetchUsers}>
+        <Text style={styles.reloadText}>🔄 Reload Profiles</Text>
+      </TouchableOpacity>
+
+      <ScrollView horizontal>
+        <View style={[styles.table, { width: screenWidth - 20 }]}>  
+          {/* Header */}
+          <View style={styles.headerRow}>
+            <Text style={[styles.headerCell, styles.imageHeader]}>Photo</Text>
+            <Text style={styles.headerCell}>Name</Text>
+            <Text style={styles.headerCell}>Location</Text>
+            <Text style={styles.headerCell}>Email</Text>
+            <Text style={styles.headerCell}>Phone</Text>
+          </View>
+
+          {/* Data Rows */}
+          {users.map((user) => (
+            <TouchableOpacity
+              key={user.login.uuid}
+              style={styles.row}
+              onPress={() => navigation.navigate('ProfileDetails', { user })}
+            >
+              <Image source={{ uri: user.picture.large }} style={styles.profileImage} />
+              <Text style={styles.cell}>{user.name.first} {user.name.last}</Text>
+              <Text style={styles.cell}>{user.location.city}, {user.location.country}</Text>
+              <Text style={styles.cell}>{user.email}</Text>
+              <Text style={styles.cell}>{user.phone}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -48,45 +59,66 @@ const ProfileList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
-    paddingBottom: 20,
+    backgroundColor: '#f0f2f5',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
   },
-  list: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    marginBottom: 15,
-    padding: 15,
+  reloadButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 14,
+    paddingHorizontal: 25,
     borderRadius: 12,
-    width: '95%',
-    elevation: 5, 
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    alignSelf: 'center',
+    marginBottom: 15,
   },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 15,
+  reloadText: {
+    fontSize: 20,
+    color: '#fff',
+    fontWeight: 'bold',
   },
-  textContainer: {
-    flexDirection: 'column',
+  table: {
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 5,
   },
-  name: {
+  headerRow: {
+    flexDirection: 'row',
+    backgroundColor: '#007BFF',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+  },
+  headerCell: {
+    flex: 1,
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#fff',
+    textAlign: 'center',
+    paddingVertical: 12,
   },
-  location: {
-    fontSize: 14,
-    color: '#666',
+  imageHeader: {
+    flex: 0.8,
+  },
+  row: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingVertical: 14,
+    backgroundColor: '#fff',
+  },
+  profileImage: {
+    width: 80,  // Foto më e madhe për një pamje më të qartë
+    height: 80,
+    borderRadius: 40,
+    marginHorizontal: 10,
+  },
+  cell: {
+    flex: 1,
+    fontSize: 18, // Tekst më i madh për lexueshmëri më të mirë
+    textAlign: 'center',
+    paddingVertical: 10,
+    color: '#333',
   },
 });
 
