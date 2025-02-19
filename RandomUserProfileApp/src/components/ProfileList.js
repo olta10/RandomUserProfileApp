@@ -1,17 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, FlatList, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, TextInput } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";  // Import Ionicons
 
 const ProfileList = ({ navigation }) => {
   const [users, setUsers] = useState([]);
-  const screenWidth = Dimensions.get('window').width; // Merr gjerësinë e ekranit
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
+    setLoading(true);
     try {
-      const response = await fetch('https://randomuser.me/api/?results=12');
+      const response = await fetch("https://randomuser.me/api/?results=12");
       const data = await response.json();
       setUsers(data.results);
+      setFilteredUsers(data.results);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error("Error fetching user data:", error);
+    }
+    setLoading(false);
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      setFilteredUsers(
+        users.filter(
+          (user) =>
+            user.name.first.toLowerCase().includes(query.toLowerCase()) ||
+            user.name.last.toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredUsers(users);
     }
   };
 
@@ -21,37 +42,43 @@ const ProfileList = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* Reload button */}
       <TouchableOpacity style={styles.reloadButton} onPress={fetchUsers}>
-        <Text style={styles.reloadText}>🔄 Reload Profiles</Text>
+        <Ionicons name="reload-circle-outline" size={30} color="#fff" />
+        <Text style={styles.reloadText}>Reload Profiles</Text>
       </TouchableOpacity>
 
-      <ScrollView horizontal>
-        <View style={[styles.table, { width: screenWidth - 20 }]}>  
-          {/* Header */}
-          <View style={styles.headerRow}>
-            <Text style={[styles.headerCell, styles.imageHeader]}>Photo</Text>
-            <Text style={styles.headerCell}>Name</Text>
-            <Text style={styles.headerCell}>Location</Text>
-            <Text style={styles.headerCell}>Email</Text>
-            <Text style={styles.headerCell}>Phone</Text>
-          </View>
+      {/* Search Bar */}
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search by name"
+        value={searchQuery}
+        onChangeText={handleSearch}
+      />
 
-          {/* Data Rows */}
-          {users.map((user) => (
+      {/* Loading Spinner */}
+      {loading ? (
+        <ActivityIndicator size="large" color="#007BFF" style={styles.spinner} />
+      ) : (
+        <FlatList
+          data={filteredUsers}
+          keyExtractor={(user) => user.login.uuid}
+          renderItem={({ item: user }) => (
             <TouchableOpacity
-              key={user.login.uuid}
-              style={styles.row}
-              onPress={() => navigation.navigate('ProfileDetails', { user })}
+              style={styles.card}
+              onPress={() => navigation.navigate("ProfileDetails", { user })}
             >
-              <Image source={{ uri: user.picture.large }} style={styles.profileImage} />
-              <Text style={styles.cell}>{user.name.first} {user.name.last}</Text>
-              <Text style={styles.cell}>{user.location.city}, {user.location.country}</Text>
-              <Text style={styles.cell}>{user.email}</Text>
-              <Text style={styles.cell}>{user.phone}</Text>
+              <View style={styles.cardContent}>
+                <Image source={{ uri: user.picture.large }} style={styles.profileImage} />
+                <View style={styles.userInfo}>
+                  <Text style={styles.userName}>{`${user.name.first} ${user.name.last}`}</Text>
+                  <Text style={styles.userLocation}>{`${user.location.city}, ${user.location.country}`}</Text>
+                </View>
+              </View>
             </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+          )}
+        />
+      )}
     </View>
   );
 };
@@ -59,66 +86,70 @@ const ProfileList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f2f5',
+    backgroundColor: "#f0f2f5",
     paddingVertical: 20,
     paddingHorizontal: 10,
   },
   reloadButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 14,
+    backgroundColor: "#007BFF",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
     paddingHorizontal: 25,
-    borderRadius: 12,
-    alignSelf: 'center',
+    borderRadius: 30,
+    alignSelf: "center",
     marginBottom: 15,
   },
   reloadText: {
-    fontSize: 20,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  table: {
-    alignSelf: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    overflow: 'hidden',
-    elevation: 5,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    backgroundColor: '#007BFF',
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-  },
-  headerCell: {
-    flex: 1,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    paddingVertical: 12,
+    color: "#fff",
+    fontWeight: "bold",
+    marginLeft: 10,
   },
-  imageHeader: {
-    flex: 0.8,
+  searchBar: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 30,
+    marginBottom: 15,
+    fontSize: 16,
+    color: "#333",
   },
-  row: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    paddingVertical: 14,
-    backgroundColor: '#fff',
+  spinner: {
+    marginTop: 50,
+  },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    elevation: 3,
+    marginBottom: 20,
+    marginHorizontal: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+  },
+  cardContent: {
+    flexDirection: "row",
+    padding: 15,
+    alignItems: "center",
   },
   profileImage: {
-    width: 80,  // Foto më e madhe për një pamje më të qartë
-    height: 80,
-    borderRadius: 40,
-    marginHorizontal: 10,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    marginRight: 15,
   },
-  cell: {
+  userInfo: {
     flex: 1,
-    fontSize: 18, // Tekst më i madh për lexueshmëri më të mirë
-    textAlign: 'center',
-    paddingVertical: 10,
-    color: '#333',
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  userLocation: {
+    fontSize: 14,
+    color: "#888",
   },
 });
 

@@ -6,13 +6,13 @@ const UserProfile = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Image 
-        source={{ uri: user.image || user.picture?.large }} // Fix image issue
-        style={styles.image} 
-        onError={(e) => console.log("Image Load Error:", e.nativeEvent.error)} // Debugging
+      <Image
+        source={{ uri: user.picture.large }}
+        style={styles.image}
+        onError={(e) => console.log("Image Load Error:", e.nativeEvent.error)} 
       />
       <Text style={styles.name}>
-        {user.firstName || user.name?.first} {user.lastName || user.name?.last}
+        {user.name.first} {user.name.last}
       </Text>
       <Text style={styles.email}>{user.email}</Text>
       <Text style={styles.phone}>{user.phone}</Text>
@@ -26,17 +26,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#f8f8f8",
   },
   image: {
     width: 150,
     height: 150,
     borderRadius: 75,
     marginBottom: 20,
-    backgroundColor: "#ccc", // Placeholder color in case image fails to load
+    backgroundColor: "#ccc",
   },
   name: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 10,
