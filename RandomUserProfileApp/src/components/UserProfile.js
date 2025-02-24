@@ -9,7 +9,7 @@ const UserProfile = ({ route }) => {
       <Image
         source={{ uri: user.picture.large }}
         style={styles.image}
-        onError={(e) => console.log("Image Load Error:", e.nativeEvent.error)} 
+        onError={(e) => console.log("Image Load Error:", e.nativeEvent.error)}
       />
       <Text style={styles.name}>
         {user.name.first} {user.name.last}
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#F8C8DC", // Soft baby pink
   },
   image: {
     width: 150,
@@ -34,20 +34,22 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     marginBottom: 20,
     backgroundColor: "#ccc",
+    borderWidth: 5,
+    borderColor: "#FFB6C1", // Border around image for added style
   },
   name: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 10,
   },
   email: {
-    fontSize: 18,
+    fontSize: 20,
     color: "#666",
     marginBottom: 5,
   },
   phone: {
-    fontSize: 18,
+    fontSize: 20,
     color: "#666",
     marginBottom: 5,
   },

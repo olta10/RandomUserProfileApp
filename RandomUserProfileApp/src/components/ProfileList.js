@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, TextInput } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";  // Import Ionicons
+import {
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+  TextInput,
+} from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons"; // Import Ionicons
 
 const ProfileList = ({ navigation }) => {
   const [users, setUsers] = useState([]);
@@ -58,7 +67,7 @@ const ProfileList = ({ navigation }) => {
 
       {/* Loading Spinner */}
       {loading ? (
-        <ActivityIndicator size="large" color="#007BFF" style={styles.spinner} />
+        <ActivityIndicator size="large" color="#FFB6C1" style={styles.spinner} />
       ) : (
         <FlatList
           data={filteredUsers}
@@ -86,12 +95,12 @@ const ProfileList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f2f5",
+    backgroundColor: "#fff5f7", // Baby Pink background
     paddingVertical: 20,
     paddingHorizontal: 10,
   },
   reloadButton: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#FFB6C1", // Baby Pink button
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -114,6 +123,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
     color: "#333",
+    borderColor: "#FFB6C1", // Baby Pink border
+    borderWidth: 1,
   },
   spinner: {
     marginTop: 50,
