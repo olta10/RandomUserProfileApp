@@ -3,10 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "react-native-vector-icons";
-import ProfileList from "./src/components/ProfileList";
-import UserProfile from "./src/components/UserProfile";
-import Login from "./src/components/Login";
-import UsersScreen from "./src/components/UsersScreen";
+import ProfileList from "./src/ProfileList";
+import UserProfile from "./src/UserProfile";
+import Login from "./src/Login";
+import UsersScreen from "./src/UsersScreen";
 
 // Create Stack and Tab Navigators
 const Stack = createStackNavigator();
@@ -15,15 +15,15 @@ const Tab = createBottomTabNavigator();
 // Home Stack for Profile List and Profile Details
 const HomeStack = () => (
   <Stack.Navigator
-    // screenOptions={{
-    //   headerStyle: {
-    //     backgroundColor: "#FFB6C1", // Baby pink background
-    //   },
-    //   headerTintColor: "#fff", // White text color
-    //   headerTitleStyle: {
-    //     fontWeight: "bold",
-    //   },
-    // }}
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#FF69B4", // Deep pink for a richer look
+      },
+      headerTintColor: "#fff", // White text color
+      headerTitleStyle: {
+        fontWeight: "bold",
+      },
+    }}
   >
     <Stack.Screen
       name="ProfileList"
@@ -51,10 +51,10 @@ const MainTabs = () => (
         }
         return <Ionicons name={iconName} size={size} color={color} />;
       },
-      tabBarActiveTintColor: "#FFB6C1", // Baby pink for active tab
+      tabBarActiveTintColor: "#FF1493", // Bright pink for active tab
       tabBarInactiveTintColor: "gray",
       tabBarStyle: {
-        backgroundColor: "#fff5f7", // Light pink background for the tab bar
+        backgroundColor: "#FFE4E1", // Soft pastel pink for better aesthetics
         borderTopWidth: 0,
       },
     })}
